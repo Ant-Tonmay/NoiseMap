@@ -1,0 +1,4 @@
+.outer-layer{
+    display: flex;
+    flex-direction: row;
+}
