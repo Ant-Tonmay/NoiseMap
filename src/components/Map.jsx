@@ -45,28 +45,28 @@ function Map() {
     fullscreenControl: true,
   };
 
+  async function fetchData(url) {
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      // ✅ Map response to marker format
+      const markerData = data.map((item) => ({
+        position: {
+          lat: parseFloat(item.latitude),
+          lng: parseFloat(item.longitude),
+        },
+        color: getColor(item.color_band),
+      }));
+      setMarkers(markerData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
   // ✅ Fetch noise data from the API
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch("http://localhost:8000/noise/all");
-        const data = await response.json();
-
-        // ✅ Map response to marker format
-        const markerData = data.map((item) => ({
-          position: {
-            lat: parseFloat(item.latitude),
-            lng: parseFloat(item.longitude),
-          },
-          color: getColor(item.color_band),
-        }));
-        setMarkers(markerData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    }
-
-    fetchData();
+    fetchData("http://localhost:8000/noise/all");
   }, []);
 
   // ✅ Function to get color based on color_band
@@ -98,8 +98,29 @@ function Map() {
     setSelectedCity(city);
     setIsOpen(false); // Close dropdown after selecting city
   };
+  function formatDate(date) {
+    let month = parseInt(date.getMonth()) + 1;
+    if (month < 9) month = "0" + month;
 
-  const handleDatePick = (date) => {};
+    let dt = date.getDate();
+    if (dt < 9) dt = "0" + dt;
+
+    return dt + "-" + month + "-" + date.getFullYear();
+  }
+  const handleDatePick = async (date) => {
+    const _date = formatDate(date);
+    console.log(_date);
+
+    try {
+      const res = await fetchData(
+        `http://localhost:8000/noise/?start_date=${_date}`
+      );
+
+      console.log(res);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   return (
     <div className="outer-layer" style={{ padding: "20px" }}>
@@ -157,7 +178,7 @@ function Map() {
 
       <DatePicker
         selected={selectedDate}
-        onChange={(date) => setSelectedDate(date)}
+        onChange={(date) => handleDatePick(date)}
         dateFormat="dd/MM/yyyy"
       />
 
