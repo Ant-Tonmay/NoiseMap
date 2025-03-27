@@ -1,4 +1,19 @@
 .outer-layer{
     display: flex;
+    flex-direction: column;
+}
+.top{
+    width: 100%;
+    display: flex;
     flex-direction: row;
+    justify-content: space-evenly;
+}
+.w-50{
+    width: 45%;
+
+}
+.map-view{
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
 }
