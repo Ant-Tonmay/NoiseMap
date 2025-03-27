@@ -13,8 +13,8 @@ export const cityCoordinates = {
   };
 export const cities = Object.keys(cityCoordinates);
 export const containerStyle = {
-    width: "600px",
-    height: "600px",
+    width: "100vw",
+    height: "100vh",
   };
 
 export const mapOptions = {
